@@ -170,7 +170,7 @@ void Scene::create() {
 
 	/*Box* b1 = new Box(7.0f, 7.0f, 7.0f, false);
 	b1->setMeshResources(phongShader, textures[BOX], materials[RED]);
-	b1->translate(glm::vec3(10.0f, 20.0f, 10.0f));
+	b1->translate(glm::vec3(10.0f, 25.0f, 10.0f));
 	b1->setRotation(Transformation::makeRotationMatrix(glm::normalize(glm::vec3(0.0f, 0.7f, 0.4f)), -0.7f * 3.14159f));
 	b1->getBodyStateSolver()->Body.P = glm::vec3(-25.0f, 0.0f, 0.0f);
 	b1->getBodyStateSolver()->makeStateInitial();

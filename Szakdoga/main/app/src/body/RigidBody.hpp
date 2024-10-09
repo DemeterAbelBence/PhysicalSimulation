@@ -61,7 +61,7 @@ namespace RigidBody {
         }
 
         void updateAngularComponents(float t) {
-           // Body.L += Body.torque * t;
+            Body.L += Body.torque * t;
             Body.Iinv = Body.R * Body.Ibodyinv * glm::transpose(Body.R);
             Body.omega = Body.Iinv * Body.L;
             Body.R += star(Body.omega) * Body.R * t;

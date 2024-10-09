@@ -110,7 +110,7 @@ public:
 			for (const auto& c : contactData) {
 				glm::vec3 ra = c.point - A->X;
 				glm::vec3 rb = c.point - B->X;
-				glm::vec3 velpa = A->vel;// +glm::cross(A->omega, ra);
+				glm::vec3 velpa = A->vel + glm::cross(A->omega, ra);
 				glm::vec3 velpb = B->vel + glm::cross(B->omega, rb);
 				float vrelm = glm::dot(c.normal, velpa - velpb);
 
@@ -125,16 +125,17 @@ public:
 					float j = numerator / denominator;
 
 					glm::vec3 impForce = j * c.normal;
-					glm::vec3 impTorque = glm::cross(ra, impForce);
+					glm::vec3 impTorqueA = glm::cross(ra, impForce);
+					glm::vec3 impTorqueB = glm::cross(rb, impForce);
 
 					A->P += impForce;
 					A->vel = A->P * A->invMass;
-					A->L += impTorque;
+					A->L += impTorqueA;
 					A->omega = A->Iinv * A->L;
 
 					B->P -= impForce;
 					B->vel = B->P * B->invMass;
-					B->L -= impTorque;
+					B->L -= impTorqueB;
 					B->omega = B->Iinv * B->L;
 
 					glm::vec3 velpap = velpa + j * A->invMass * c.normal;
