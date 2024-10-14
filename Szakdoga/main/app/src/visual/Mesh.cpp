@@ -1,16 +1,11 @@
 #include "Mesh.hpp"
 
 void Mesh::drawMeshFrame(const Camera& camera) {
-	transformation->setScaleMatrix(glm::mat4(
-		glm::vec4(1.2f, 0.0f, 0.0f, 0.0f),
-		glm::vec4(0.0f, 1.2f, 0.0f, 0.0f),
-		glm::vec4(0.0f, 0.0f, 1.2f, 0.0f),
-		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
-	));
+	transformation->setScaleMatrix(glm::vec3(1.2f, 1.2f, 1.2f));
 	meshFrame = 1;
 	draw(camera);
 
-	transformation->setScaleMatrix(glm::mat4(1.0f));
+	transformation->setScaleMatrix(glm::vec3(1.0f, 1.0f, 1.0f));
 	meshFrame = 0;
 }
 

@@ -3,7 +3,6 @@
 #include "app/Application.hpp"
 
 int main(void) {
-
    try {
         Application::initialize();
         Application::render();

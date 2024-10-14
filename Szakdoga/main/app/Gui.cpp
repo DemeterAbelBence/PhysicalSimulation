@@ -14,26 +14,32 @@ void Gui::renderObjectPicker() {
     static float object_speed = 0.05f;
 
     ImGui::Begin("Select object");
+
     ImGui::SliderFloat("Camera move speed", &move_speed, 0.01f, 5.0f, "%.2f", 0);
     ImGui::SliderFloat("Camera rotate speed", &rotate_speed, 0.001f, 5.0f, "%.3f", 0);
-    ImGui::SliderFloat("Object move speed", &object_speed, 0.01f, 2.0f, "%.2f", 0);
-
-    if (ImGui::Button("Move camera")) {
-        scene->setMoveCamera(true);
+    
+    if(ImGui::SliderFloat("Object move speed", &object_speed, 0.01f, 2.0f, "%.2f", 0)) {
+        scene->resetObjectEvents(object_speed);
     }
-    else if (ImGui::Button("Next object")) {
-        scene->setMoveCamera(false);
+
+    bool move_camera = scene->getMoveCamera();
+    const char* camera_text = move_camera ? "Move objects" : "Move camera";
+    if (ImGui::Button(camera_text)) {
+        scene->setMoveCamera(!move_camera);
+    }
+
+    if (ImGui::Button("Next object")) {
         scene->getNextObject();
     }
+
     if (scene->getMoveCamera()) {
         ImGui::Text("Currently moving camera");
     }
     else {
         ImGui::Text("Currently moving object");
     }
-    if (ImGui::Button("Change object move speed")) {
-        scene->resetObjectEvents(object_speed);
-    }
+    ImGui::Text("W-up, S-down, A-left, D-right, LSHIFT-forward");
+    ImGui::Text("LCTRL-backward, Q-rotateLeft, E-rotateRight");
 
     ImGui::End();
 
@@ -145,14 +151,23 @@ void Gui::renderRotationSettings() {
 void Gui::renderSimulationSettings() {
     static float time_step = 0.01f;
     static const char* precision = "%.3f";
-    
+
     ImGui::Begin("Simulation settings");
 
-    if (ImGui::SliderFloat("time_step", &time_step, 0.0f, 0.1f, precision, 0)) {
+   
+    bool enable_debug = SceneObject::getEnableDebug();
+    const char* debug_text = enable_debug ? "Disable Debug" : "Enable Debug";
+    if(ImGui::Button(debug_text)) {
+        SceneObject::setEnableDebug(!enable_debug);
+    }
+    if (ImGui::SliderFloat("time_step", &time_step, 0.0f, 0.2f, precision, 0)) {
         scene->resetSimulationEvents(time_step);
     }
     if (ImGui::Button("Apply impulse")) {
         CollisionHandler::apply_impulse = true;
+    }
+    if (ImGui::Button("Apply displacement")) {
+        CollisionHandler::apply_displacement = true;
     }
     if (ImGui::Button("Rollback simulation")) {
         scene->rollbackSimulation();
@@ -165,6 +180,46 @@ void Gui::renderSimulationSettings() {
     }
 
     ImGui::End();
+}
+
+void Gui::renderTerrainSettings() {
+    static float amplitude = 0.00f;
+    static float phase = 0.18f;
+    static int iterations = 6;
+    static float scale = 10.0f;
+    static float limit = 1.0f;
+    static const char* precision = "%.2f";
+
+    ImGui::Begin("Terrain settings");
+    ImGui::SliderFloat("amplitude", &amplitude, 0.0f, limit, precision, 0);
+    ImGui::SliderFloat("phase", &phase, 0.0f, limit, precision, 0);
+    ImGui::SliderInt("iterations", &iterations, 1, 32);
+    ImGui::SliderFloat("scale", &scale, 1.0f, 10.0f, precision, 0);
+    if (ImGui::Button("Reset to default")) {
+        amplitude = 0.0f; phase = 0.1f; iterations = 3;
+        scale = 1.0f;
+    }
+    ImGui::End();
+
+    scene->getTerrain()->setAmplitude(amplitude);
+    scene->getTerrain()->setPhase(phase);
+    scene->getTerrain()->setIterations(iterations);
+}
+
+void Gui::renderTesselationPicker() {
+    static float min_tess = 1.0f;
+    static float max_tess = 16.0f;
+    static float min_dist = 0.0f;
+    static float max_dist = 50.0f;
+
+    ImGui::Begin("Tesselation parameters");
+    ImGui::SliderFloat("min_tess", &min_tess, 1.0f, 64.0f, "%.0f", 0);
+    ImGui::SliderFloat("max_tess", &max_tess, 1.0f, 64.0f, "%.0f", 0);
+    ImGui::SliderFloat("min_dist", &min_dist, 0.0f, 10.0f, "%.1f", 0);
+    ImGui::SliderFloat("max_dist", &max_dist, 0.0f, 100.0f, "%.1f", 0);
+    ImGui::End();
+
+    scene->getTerrain()->setTesselationParameters((unsigned int)min_tess, (unsigned int)max_tess, min_dist, max_dist);
 }
 
 void Gui::initialize(GLFWwindow* window, Scene* _scene) {
@@ -193,7 +248,7 @@ void Gui::render(int sceneWidth, int windowWidth, int windowHeight) {
     renderPrimitivePicker();
     renderRotationSettings();
     renderSimulationSettings();
-   /* renderProjectionSettings();
-    renderViewSettings();*/
+    renderTerrainSettings();
+    renderTesselationPicker();
     renderFrameRateBox();
 }

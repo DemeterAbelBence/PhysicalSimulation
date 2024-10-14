@@ -1,27 +1,16 @@
 #include "PatchSurface.hpp"
 
-PatchSurface::PatchSurface(unsigned int _rezolution) {
+PatchSurface::PatchSurface(float _size, unsigned int _rezolution) {
     rezolution = _rezolution;
-	size = 1.0f;
-}
-
-void PatchSurface::setNewTesselationProgram(const TesselationProgram& _program) {
-	if (program)
-		delete program;
-	program = new TesselationProgram(_program);
+	size = _size;
 }
 
 glm::vec3 PatchSurface::generateVertexData(float x, float y) {
     glm::vec3 position = glm::vec3(x, 0.0f, y);
-	position = (position);
-
     return position;
 }
 
 void PatchSurface::create() {
-	program->bind();
-	program->createProgram();
-
 	unsigned int r = rezolution;
 	float s = size;
 
@@ -38,10 +27,15 @@ void PatchSurface::create() {
 
 void PatchSurface::draw(const Camera& camera) const {
     vertexArray.bind();
+	
+	program->bind();
+	program->setMat4("MI", transformation->makeModelInverseMatrix());
+	program->setMat4("M", transformation->makeModelMatrix());
 	program->setMat4("V", camera.getView());
 	program->setMat4("P", camera.getProjection());
 	program->setVec3("eye", camera.getEye());
 	setAllUniforms();
+
 	glPatchParameteri(GL_PATCH_VERTICES, 4);
 	glPolygonMode(GL_FRONT_AND_BACK, primitiveType);
     glDrawArrays(GL_PATCHES, 0, 4 * rezolution * rezolution);

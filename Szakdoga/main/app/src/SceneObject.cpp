@@ -2,6 +2,8 @@
 
 float SceneObject::delta_time = 0.01f;
 
+bool SceneObject::enable_debug = true;
+
 SceneObject::SceneObject() {
 	collider = nullptr;
 	mesh = nullptr;
@@ -9,8 +11,8 @@ SceneObject::SceneObject() {
 	transformation = nullptr;
 }
 
-void SceneObject::translate(glm::vec3 t) {
-	bodyStateSolver->Body.X += t;
+void SceneObject::translate(glm::vec3 translation) {
+	bodyStateSolver->Body.X += translation;
 	updateTransformations();
 }
 
@@ -32,42 +34,40 @@ void SceneObject::create() {
 void SceneObject::draw(const Camera& camera) const {
 	mesh->draw(camera);
 
-	if (collider->type == Collider::C_CUBOID) 
-	{
-		CuboidCollider* c = dynamic_cast<CuboidCollider*>(collider);
+	if (enable_debug) {
+		if (collider->type == Collider::C_CUBOID)
+		{
+			CuboidCollider* c = dynamic_cast<CuboidCollider*>(collider);
 
-		auto p = c->getTransPoints();
-		auto points = std::vector<glm::vec3>(p.begin(), p.end());
-		DebugDrawer::setMode(GL_POINTS);
-		DebugDrawer::setVertexData(points);
-		DebugDrawer::draw(camera, glm::vec3(1.0f, 0.0f, 0.0f));
-
-		std::vector<std::vector<glm::vec3>> sideData;
-		sideData.push_back(c->getSideDrawData(0));
-		sideData.push_back(c->getSideDrawData(1));
-		sideData.push_back(c->getSideDrawData(2));
-		sideData.push_back(c->getSideDrawData(3));
-		sideData.push_back(c->getSideDrawData(4));
-		sideData.push_back(c->getSideDrawData(5));
-		
-		for (const auto& data : sideData) {
-			DebugDrawer::setMode(GL_LINES);
+			auto p = c->getTransPoints();
+			auto points = std::vector<glm::vec3>(p.begin(), p.end());
+			DebugDrawer::setMode(GL_POINTS);
+			DebugDrawer::setVertexData(points);
 			DebugDrawer::setOverrideZ(0);
-			DebugDrawer::setVertexData(data);
-			DebugDrawer::draw(camera, glm::vec3(0.0f, 0.4f, 0.4f));
+			DebugDrawer::draw(camera, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			std::vector<std::vector<glm::vec3>> sideData;
+			sideData.push_back(c->getSideDrawData(0));
+			sideData.push_back(c->getSideDrawData(1));
+			sideData.push_back(c->getSideDrawData(2));
+			sideData.push_back(c->getSideDrawData(3));
+			sideData.push_back(c->getSideDrawData(4));
+			sideData.push_back(c->getSideDrawData(5));
+
+			for (const auto& data : sideData) {
+				DebugDrawer::setMode(GL_LINES);
+				DebugDrawer::setOverrideZ(0);
+				DebugDrawer::setVertexData(data);
+				DebugDrawer::draw(camera, glm::vec3(0.0f, 0.4f, 0.4f));
+			}
 		}
 	}
 }
 
 void SceneObject::updateTransformations() {
-	transformation->setTranslationMarix(glm::mat4(
-		glm::vec4(1.0f, 0.0f, 0.0f, bodyStateSolver->Body.X.x),
-		glm::vec4(0.0f, 1.0f, 0.0f, bodyStateSolver->Body.X.y),
-		glm::vec4(0.0f, 0.0f, 1.0f, bodyStateSolver->Body.X.z),
-		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
-	));
+	transformation->setTranslationMarix(bodyStateSolver->Body.X);
 
-	transformation->setRotationMarix(glm::mat4(
+	transformation->setR(glm::mat4(
 		glm::vec4(bodyStateSolver->Body.R[0], 0.0f),
 		glm::vec4(bodyStateSolver->Body.R[1], 0.0f),
 		glm::vec4(bodyStateSolver->Body.R[2], 0.0f),

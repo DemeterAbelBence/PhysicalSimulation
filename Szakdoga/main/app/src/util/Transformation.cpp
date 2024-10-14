@@ -59,6 +59,22 @@ glm::mat4 Transformation::makeRotationMatrix(glm::vec3 rotationAxis, float rotat
 	return r;
 }
 
+void Transformation::setTranslationMarix(glm::vec3 _translation) {
+	translation = _translation;
+	T = makeTranslationMatrix(_translation);
+}
+
+void Transformation::setRotationMarix(glm::vec3 _rotationAxis, float _rotationAngle) {
+	rotationAxis = _rotationAxis;
+	rotationAngle = _rotationAngle;
+	R = makeRotationMatrix(_rotationAxis, _rotationAngle);
+}
+
+void Transformation::setScaleMatrix(glm::vec3 _scaling) {
+	scaling = _scaling;
+	S = makeScaleMatrix(_scaling);
+}
+
 glm::mat4 Transformation::makeModelMatrix() const {
 	return S * R * T;
 }

@@ -7,7 +7,7 @@ unsigned int DebugDrawer::overrideZ = 0;
 std::vector<glm::vec3> DebugDrawer::vertexData = std::vector<glm::vec3>();
 
 void DebugDrawer::initProgram() {
-	program = new GpuProgram("Points Shader");
+	program = new GpuProgram("debug_shader");
 	program->readFragmentSource("main/app/shaders/debugFragment.shader");
 	program->readVertexSource("main/app/shaders/debugVertex.shader");
 	program->createProgram();

@@ -3,18 +3,6 @@
 #include <cstdlib> 
 #include <ctime>   
 
-void Box::rollbackContactWith(SceneObject* other) {
-	float dt = delta_time / 10.0f;
-	auto contactData = collider->collidesWith(*other->getCollider());
-	while (contactData.size() > 0) {
-		updateBodyState(-dt);
-		updateTransformations();
-		contactData = collider->collidesWith(*other->getCollider());
-	};
-	updateBodyState(2.0f * dt);
-	updateTransformations();
-}
-
 Box::Box(float width, float height, float length, bool stationary) : SceneObject() {
 	mesh = new CuboidMesh(width, height, length);
 	collider = new CuboidCollider(width, height, length);
@@ -56,7 +44,7 @@ Box::Box(float width, float height, float length, bool stationary) : SceneObject
 
 		glm::vec3(0.0f),        // X 
 		glm::mat3(1.0f),        // R 
-		glm::vec3(0.0f),        // P 
+		glm::vec3(0.0f),        // P
 		glm::vec3(0.0f),        // L 
 
 		glm::mat3(1.0f),        // Iinv 
@@ -84,15 +72,13 @@ void Box::updateBodyState(float dt) {
 	bodyStateSolver->updateState(dt);
 }
 
-std::vector<SceneObject::interaction> Box::calculateInteractions(const std::vector<SceneObject*>& sceneObjects) {
+std::vector<SceneObject::interaction> Box::update(const std::vector<SceneObject*>& sceneObjects) {
 	std::vector<interaction> result;
 	for (SceneObject* sceneObject : sceneObjects) {
 		if (sceneObject != this) {
 			Collider* otherCollider = sceneObject->getCollider();
 			auto contactData = collider->collidesWith(*otherCollider);
-
 			if (contactData.size() > 0) {
-				//rollbackContactWith(sceneObject);
 				result.push_back(std::make_tuple(this, sceneObject, contactData));
 			}
 		}

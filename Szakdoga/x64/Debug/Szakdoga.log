@@ -1,5 +1,0 @@
-﻿  Scene.cpp
-C:\MyFiles\Projects\SzakdogaGit\PhysicalSimulation\Szakdoga\main\app\src\visual\SphereMesh.hpp(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  (compiling source file 'main/app/Scene.cpp')
-  
-  Szakdoga.vcxproj -> C:\MyFiles\Projects\SzakdogaGit\PhysicalSimulation\x64\Debug\Szakdoga.exe

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 #include "src/util/gl/GpuProgram.hpp"
 #include "src/util/gl/TesselationProgram.hpp"
 #include "src/util/gl/VertexArray.hpp"
@@ -10,22 +12,26 @@
 
 #include "src/visual/Mesh.hpp"
 
+#include "src/collision/CollisionHandler.hpp"
+
 #include "src/Box.hpp"
 #include "src/Sun.hpp"
-#include "src/CollisionHandler.hpp"
+#include "src/Terrain.hpp"
 
 class Scene {
 
 private:
-	Camera* camera;
 	std::vector<SceneObject*> sceneObjects;
-	Sun* sun;
 
-	GpuProgram* phongShader;
-	GpuProgram* textureShader;
+	Camera* camera;
+	Sun* sun;
+	Terrain* terrain;
+
+	std::vector<GpuProgram*> programs;
+	enum programId { PHONG, TEX, TESS };
 
 	std::vector<Texture*> textures;
-	enum texId { BOX, FLOOR, SUN, PINK };
+	enum texId { BOX, FLOOR, SUN, PINK, DIRT };
 
 	std::vector<Material*> materials;
 	enum matId { RED, GREEN, BLUE, BASIC };
@@ -48,6 +54,7 @@ public:
 	inline Camera* getCamera() const { return camera; }
 	inline void setMoveCamera(bool value) { move_camera = value; }
 	inline bool getMoveCamera() const { return move_camera; }
+	inline Terrain* getTerrain() const { return terrain; }
 	inline std::vector<SceneObject*> getGameObjects() const { return sceneObjects; }
 	inline SceneObject* getCurrentGameObject() { return sceneObjects[object_index]; }
 

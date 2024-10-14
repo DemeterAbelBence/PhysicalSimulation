@@ -31,13 +31,13 @@
     <ClCompile Include="main\app\Scene.cpp" />
     <ClCompile Include="main\app\src\body\RigidBody.cpp" />
     <ClCompile Include="main\app\src\Box.cpp" />
-    <ClCompile Include="main\app\src\CollisionHandler.cpp" />
     <ClCompile Include="main\app\src\collision\Collider.cpp" />
+    <ClCompile Include="main\app\src\collision\CollisionHandler.cpp" />
     <ClCompile Include="main\app\src\collision\CuboidCollider.cpp" />
     <ClCompile Include="main\app\src\collision\NullCollider.cpp" />
-    <ClCompile Include="main\app\src\collision\SphereCollider.cpp" />
     <ClCompile Include="main\app\src\SceneObject.cpp" />
     <ClCompile Include="main\app\src\Sun.cpp" />
+    <ClCompile Include="main\app\src\Terrain.cpp" />
     <ClCompile Include="main\app\src\util\Camera.cpp" />
     <ClCompile Include="main\app\src\util\datatypes\Dnum.cpp" />
     <ClCompile Include="main\app\src\util\datatypes\Quaternion.cpp" />
@@ -53,13 +53,12 @@
     <ClCompile Include="main\app\src\util\tex\stb_image.cpp" />
     <ClCompile Include="main\app\src\util\tex\Texture.cpp" />
     <ClCompile Include="main\app\src\util\Transformation.cpp" />
-    <ClCompile Include="main\app\src\visual\CubeFrameMesh.cpp" />
-    <ClCompile Include="main\app\src\visual\CuboidMesh.cpp" />
     <ClCompile Include="main\app\src\visual\DebugDrawer.cpp" />
     <ClCompile Include="main\app\src\visual\Mesh.cpp" />
     <ClCompile Include="main\app\src\visual\PatchSurface.cpp" />
-    <ClCompile Include="main\app\src\visual\Rect.cpp" />
-    <ClCompile Include="main\app\src\visual\SphereMesh.cpp" />
+    <ClCompile Include="main\app\src\visual\primitives\CuboidMesh.cpp" />
+    <ClCompile Include="main\app\src\visual\primitives\Rect.cpp" />
+    <ClCompile Include="main\app\src\visual\primitives\SphereMesh.cpp" />
     <ClCompile Include="main\app\src\visual\Surface.cpp" />
     <ClCompile Include="main\main.cpp" />
   </ItemGroup>
@@ -78,13 +77,13 @@
     <ClInclude Include="main\app\Scene.hpp" />
     <ClInclude Include="main\app\src\body\RigidBody.hpp" />
     <ClInclude Include="main\app\src\Box.hpp" />
-    <ClInclude Include="main\app\src\CollisionHandler.hpp" />
     <ClInclude Include="main\app\src\collision\Collider.hpp" />
+    <ClInclude Include="main\app\src\collision\CollisionHandler.hpp" />
     <ClInclude Include="main\app\src\collision\CuboidCollider.hpp" />
     <ClInclude Include="main\app\src\collision\NullCollider.hpp" />
-    <ClInclude Include="main\app\src\collision\SphereCollider.hpp" />
     <ClInclude Include="main\app\src\SceneObject.hpp" />
     <ClInclude Include="main\app\src\Sun.hpp" />
+    <ClInclude Include="main\app\src\Terrain.hpp" />
     <ClInclude Include="main\app\src\util\Camera.hpp" />
     <ClInclude Include="main\app\src\util\datatypes\Dnum.hpp" />
     <ClInclude Include="main\app\src\util\datatypes\Material.hpp" />
@@ -101,13 +100,12 @@
     <ClInclude Include="main\app\src\util\tex\stb_image.h" />
     <ClInclude Include="main\app\src\util\tex\Texture.hpp" />
     <ClInclude Include="main\app\src\util\Transformation.hpp" />
-    <ClInclude Include="main\app\src\visual\CubeFrameMesh.hpp" />
-    <ClInclude Include="main\app\src\visual\CuboidMesh.hpp" />
     <ClInclude Include="main\app\src\visual\DebugDrawer.hpp" />
     <ClInclude Include="main\app\src\visual\Mesh.hpp" />
     <ClInclude Include="main\app\src\visual\PatchSurface.hpp" />
-    <ClInclude Include="main\app\src\visual\Rect.hpp" />
-    <ClInclude Include="main\app\src\visual\SphereMesh.hpp" />
+    <ClInclude Include="main\app\src\visual\primitives\CuboidMesh.hpp" />
+    <ClInclude Include="main\app\src\visual\primitives\Rect.hpp" />
+    <ClInclude Include="main\app\src\visual\primitives\SphereMesh.hpp" />
     <ClInclude Include="main\app\src\visual\Surface.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

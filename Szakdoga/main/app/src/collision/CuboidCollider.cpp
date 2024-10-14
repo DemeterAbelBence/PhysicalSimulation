@@ -73,10 +73,10 @@ std::vector<glm::vec3> CuboidCollider::getEdgesOf(const CuboidCollider& collider
     return edges;
 }
 
-glm::vec3* CuboidCollider::calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va, float a, glm::vec3 pb, glm::vec3 vb, float b) const {
+Collider::ContactData* CuboidCollider::calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va, float a, glm::vec3 pb, glm::vec3 vb, float b) const {
     using namespace glm;
     float areParallel = dot(va, vb);
-    const float eps = glm::pow(10, -3);
+    const float eps = glm::pow(10.0f, -3);
 
     if (areParallel + eps >= 1.0f && areParallel - eps <= 1.0f) {
         return nullptr;
@@ -96,7 +96,7 @@ glm::vec3* CuboidCollider::calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va,
     }
 
     float dist = glm::length(dot(pb - pa, c)) / glm::length(c);
-    if (dist > 0.1f) {
+    if (dist > 0.4f) {
         return nullptr;
     }
     else {
@@ -117,14 +117,20 @@ glm::vec3* CuboidCollider::calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va,
 
         vec3 ra = pa + alpha * va;
         vec3 rb = pb + beta * vb;
-        return new vec3((ra + rb) / 2.0f);
+        return new ContactData {
+            glm::vec3((ra + rb) / 2.0f),
+            glm::normalize(glm::cross(va, vb)),
+            {ra, va},
+            {rb, vb},
+            false
+        };
     }
 }
 
-std::vector<Collider::ContactData> CuboidCollider::edgeEdgeCollision(const CuboidCollider& collider) const {
+std::vector<Collider::ContactData> CuboidCollider::edgeEdgeCollision(const CuboidCollider& collidee) const {
     std::vector<Collider::ContactData> result;
     std::vector<glm::vec3> edgesA = getEdgesOf(*this);
-    std::vector<glm::vec3> edgesB = getEdgesOf(collider);
+    std::vector<glm::vec3> edgesB = getEdgesOf(collidee);
 
     for (int i = 0; i < edgesA.size(); i += 2) {
         glm::vec3 vecA = edgesA[i + 1] - edgesA[i];
@@ -137,16 +143,10 @@ std::vector<Collider::ContactData> CuboidCollider::edgeEdgeCollision(const Cuboi
             vecA = glm::normalize(vecA);
             vecB = glm::normalize(vecB);
 
-            glm::vec3* inter = calculateEdgeIntersection(edgesA[i], vecA, a, edgesB[j], vecB, b);
-            if (inter != nullptr) {   
-                result.push_back({
-                    *inter,
-                    glm::normalize(glm::cross(vecA, vecB)),
-                    vecA,
-                    vecB,
-                    false
-                });
-                delete inter;
+            auto* contact = calculateEdgeIntersection(edgesA[i], vecA, a, edgesB[j], vecB, b);
+            if (contact != nullptr) {   
+                result.push_back(*contact);
+                delete contact;
             }
         }
     }
@@ -162,9 +162,9 @@ bool CuboidCollider::calculateSideIntersection(glm::vec3 point, const Side& side
         glm::vec3 edgeVector;
     };
 
-    const float eps = 0.2f;//glm::pow(10.0f, -1);
+    const float eps = 0.4f;
     float arePerpendicular = glm::dot(side.normal, point - side.points[0]);
-    if (!(-eps <= arePerpendicular && arePerpendicular <= eps)) {
+    if (glm::abs(arePerpendicular) > eps) {
         return false;
     }
     else {
@@ -186,17 +186,17 @@ bool CuboidCollider::calculateSideIntersection(glm::vec3 point, const Side& side
     }
 }
 
-std::vector<Collider::ContactData> CuboidCollider::vertexFaceCollision(const CuboidCollider& collider) const {
+std::vector<Collider::ContactData> CuboidCollider::vertexFaceCollision(const CuboidCollider& collidee) const {
     std::vector<Collider::ContactData> result;
 
-    for (const Side& side : collider.getTransSides()) {
+    for (const Side& side : collidee.getTransSides()) {
         for (const glm::vec3& point : transPoints) {
             if (calculateSideIntersection(point, side)) {
                 result.push_back({
                     point,
                     side.normal,
-                    glm::vec3(0.0f, 0.0f, 0.0f),
-                    glm::vec3(0.0f, 0.0f, 0.0f),
+                    {},
+                    {},
                     true
                 });
             }
@@ -242,9 +242,6 @@ std::vector<glm::vec3> CuboidCollider::getSideDrawData(unsigned int sideIndex)
     glm::vec3 center = transSides[sideIndex].center;
     glm::vec3 normal = transSides[sideIndex].normal;
 
-    for (glm::vec3& point : points) {
-        point += (0.2f * normal); 
-    }
     result.push_back(center); result.push_back(center + 1.5f * normal);
 
     result.push_back(points[0]); result.push_back(points[1]);
@@ -253,18 +250,6 @@ std::vector<glm::vec3> CuboidCollider::getSideDrawData(unsigned int sideIndex)
     result.push_back(points[3]); result.push_back(points[0]);
     
     return result;
-}
-
-std::vector<Collider::ContactData> CuboidCollider::collidesWith(const CuboidCollider& collider) const {
-
-    auto edgeEdge = edgeEdgeCollision(collider);
-    auto vertexFace = vertexFaceCollision(collider);
-    edgeEdge.insert(edgeEdge.end(), vertexFace.begin(), vertexFace.end());
-    return edgeEdge;
-}
-
-std::vector<Collider::ContactData> CuboidCollider::collidesWith(const SphereCollider& collider) const {
-    return std::vector<ContactData>();
 }
 
 void CuboidCollider::updateTransformations() {
@@ -284,3 +269,57 @@ void CuboidCollider::updateTransformations() {
         transSides[i].normal = glm::vec3(MI * glm::vec4(baseSides[i].normal, 0.0f));
     }
 }
+
+std::vector<Collider::ContactData> CuboidCollider::collidesWith(const CuboidCollider& collidee) const {
+
+    auto edgeEdge = edgeEdgeCollision(collidee);
+    auto vertexFace = vertexFaceCollision(collidee);
+    edgeEdge.insert(edgeEdge.end(), vertexFace.begin(), vertexFace.end());
+    return edgeEdge;
+}
+
+glm::vec3* CuboidCollider::vertexFaceContactDepth(const CuboidCollider& collidee, const Collider::ContactData& contact) {
+    const Side* contactSide = nullptr;
+    const float eps = 0.0001f;
+    for (const auto& side : collidee.getTransSides()) {
+        if (glm::abs(contact.normal.x - side.normal.x) < eps &&
+            glm::abs(contact.normal.y - side.normal.y) < eps &&
+            glm::abs(contact.normal.z - side.normal.z) < eps) {
+            contactSide = &side;
+            break;
+        }
+    }
+
+    if (contactSide == nullptr) {
+        std::cout << "Incorrect contact calculation!" << std::endl;
+        return nullptr;
+    }
+
+    if (glm::dot(contactSide->normal, contact.point - contactSide->center) >= 0.0f) {
+        return nullptr;
+    }
+    else {
+        float projectionVectorLength = glm::dot(contactSide->center - contact.point, contact.normal);
+        glm::vec3 projectionVector = projectionVectorLength * glm::normalize(contact.normal);
+        return new glm::vec3(projectionVector);
+    }
+
+    return nullptr;
+}
+
+glm::vec3* CuboidCollider::edgeEdgeContactDepth(const CuboidCollider& collidee, const ContactData& contact) {
+    glm::mat4 MI = collidee.getTransformation()->makeModelInverseMatrix();
+    glm::vec3 edgePointA = contact.edgeA[0];
+    edgePointA = glm::vec3(glm::vec4(edgePointA, 1.0f) * MI);
+
+    if (edgePointA.x < (collidee.getWidth() / 2.0f) &&
+        edgePointA.y < (collidee.getHeight() / 2.0f) &&
+        edgePointA.z < (collidee.getLength() / 2.0f)) {
+
+        return new glm::vec3(contact.edgeB[0] - contact.edgeA[0]);
+    }
+
+    return nullptr;
+}
+
+

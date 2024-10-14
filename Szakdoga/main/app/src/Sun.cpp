@@ -38,7 +38,7 @@ void Sun::resetBodyState() {}
 
 void Sun::updateBodyState(float dt) {}
 
-std::vector<SceneObject::interaction> Sun::calculateInteractions(const std::vector<SceneObject*>& sceneObjects) {
+std::vector<SceneObject::interaction> Sun::update(const std::vector<SceneObject*>& sceneObjects) {
 	for (SceneObject* s : sceneObjects) {
 		setUniformLight(s);
 	}

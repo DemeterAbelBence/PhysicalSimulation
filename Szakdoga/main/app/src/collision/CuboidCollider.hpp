@@ -2,7 +2,6 @@
 
 #include <array>
 #include "Collider.hpp"
-#include "SphereCollider.hpp"
 
 class CuboidCollider : public Collider {
 
@@ -32,11 +31,11 @@ private:
 
 private:
 	std::vector<glm::vec3> getEdgesOf(const CuboidCollider& collider) const;
-	glm::vec3* calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va, float a, glm::vec3 pb, glm::vec3 vb, float b) const;
-	std::vector<ContactData> edgeEdgeCollision(const CuboidCollider& collider) const;
+	Collider::ContactData* calculateEdgeIntersection(glm::vec3 pa, glm::vec3 va, float a, glm::vec3 pb, glm::vec3 vb, float b) const;
+	std::vector<ContactData> edgeEdgeCollision(const CuboidCollider& collidee) const;
 
 	bool calculateSideIntersection(glm::vec3 point, const Side& side) const;
-	std::vector<ContactData> vertexFaceCollision(const CuboidCollider& collider) const;
+	std::vector<ContactData> vertexFaceCollision(const CuboidCollider& collidee) const;
 
 public:
 	CuboidCollider(float w, float h, float l);
@@ -53,9 +52,10 @@ public:
 
 	std::vector<glm::vec3> getSideDrawData(unsigned int sideIndex);
 
-	std::vector<ContactData> collidesWith(const CuboidCollider& collider) const override;
-	std::vector<ContactData> collidesWith(const SphereCollider& collider) const override;
-
 	void updateTransformations() override;
+	std::vector<ContactData> collidesWith(const CuboidCollider& collidee) const override;
+
+	static glm::vec3* vertexFaceContactDepth(const CuboidCollider& collidee, const ContactData& contact);
+	static glm::vec3* edgeEdgeContactDepth(const CuboidCollider& collidee, const ContactData& contact);
 };
 

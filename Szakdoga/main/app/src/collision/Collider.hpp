@@ -3,6 +3,7 @@
 #include <glm.hpp>
 #include <iostream>
 #include <vector>
+#include <array>
 
 #include "../util/Transformation.hpp"
 
@@ -22,23 +23,21 @@ public:
 	struct ContactData {
 		glm::vec3 point;
 		glm::vec3 normal;
-		glm::vec3 edgeDirA;
-		glm::vec3 edgeDirB;
+		std::array<glm::vec3, 2> edgeA;
+		std::array<glm::vec3, 2> edgeB;
 
 		bool vertexFace;
 	};
 
 protected:
 	Transformation* transformation;
-
-	virtual std::vector<ContactData> collidesWith(const CuboidCollider& collider) const = 0;
-	virtual std::vector<ContactData> collidesWith(const SphereCollider& collider) const = 0;
-
+	
 public:
 	inline void setTransformation(Transformation* value) { transformation = value; }
 	inline const Transformation* getTransformation() const { return transformation; }
 
 	std::vector<ContactData> collidesWith(const Collider& collider) const;
 
-	virtual void updateTransformations() = 0;
+	virtual void updateTransformations();
+	virtual std::vector<ContactData> collidesWith(const CuboidCollider& collider) const = 0;
 };

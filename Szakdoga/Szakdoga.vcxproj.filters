@@ -48,9 +48,6 @@
     <ClCompile Include="main\app\src\collision\NullCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main\app\src\collision\SphereCollider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main\app\src\util\datatypes\Dnum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,21 +93,6 @@
     <ClCompile Include="main\app\src\util\Transformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main\app\src\visual\CubeFrameMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\app\src\visual\CuboidMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\app\src\visual\PatchSurface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\app\src\visual\Rect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\app\src\visual\SphereMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main\app\src\Box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,7 +123,22 @@
     <ClCompile Include="main\app\src\visual\DebugDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main\app\src\CollisionHandler.cpp">
+    <ClCompile Include="main\app\src\visual\primitives\CuboidMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\app\src\visual\primitives\SphereMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\app\src\visual\primitives\Rect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\app\src\collision\CollisionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\app\src\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\app\src\visual\PatchSurface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,9 +177,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main\app\src\collision\NullCollider.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\app\src\collision\SphereCollider.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main\app\src\util\datatypes\Dnum.hpp">
@@ -233,21 +227,6 @@
     <ClInclude Include="main\app\src\util\Transformation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main\app\src\visual\CubeFrameMesh.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\app\src\visual\CuboidMesh.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\app\src\visual\PatchSurface.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\app\src\visual\Rect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\app\src\visual\SphereMesh.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main\app\src\Box.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -278,7 +257,22 @@
     <ClInclude Include="main\app\src\visual\DebugDrawer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main\app\src\CollisionHandler.hpp">
+    <ClInclude Include="main\app\src\visual\primitives\SphereMesh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\app\src\visual\primitives\Rect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\app\src\visual\primitives\CuboidMesh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\app\src\collision\CollisionHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\app\src\Terrain.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\app\src\visual\PatchSurface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

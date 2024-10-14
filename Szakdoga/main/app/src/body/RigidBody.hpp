@@ -34,14 +34,13 @@ namespace RigidBody {
         BodyData Initial;
         BodyData Previous;
 
-        bool ContactOccured = false;
+        const float ANGULAR_THRESHOLD = 300.0f;
 
     public:
         BodyStateSolver(BodyData _Body) : Body( _Body ) {}
 
         void rollbackToInitial() {
             Body = Initial; 
-            ContactOccured = false;
         }
 
         void rollbackToPrevious() {
@@ -53,23 +52,25 @@ namespace RigidBody {
         }
 
         void computeTotalTorque(const std::vector<glm::vec3>& particles) {
-            glm::vec3 torque = glm::vec3(0.0f);
-            for (const auto& p : particles) {
-                torque += glm::cross(p - Body.X, Body.force);
-            }
-            Body.torque = 0.1f * torque;
+            Body.torque = glm::cross(particles[0] - Body.X, Body.force);
         }
 
-        void updateAngularComponents(float t) {
-            Body.L += Body.torque * t;
+        void updateAngularComponents(float t) {     
             Body.Iinv = Body.R * Body.Ibodyinv * glm::transpose(Body.R);
             Body.omega = Body.Iinv * Body.L;
+
+            Body.L += Body.torque * t;
+            if (glm::length(Body.L) > ANGULAR_THRESHOLD) {
+                glm::vec3 dirL = glm::normalize(Body.L);
+                Body.L = ANGULAR_THRESHOLD * dirL;
+            }
             Body.R += star(Body.omega) * Body.R * t;
         }
 
         void updateLinearComponents(float t) {
-            Body.P += Body.force * t;
             Body.vel = Body.invMass * Body.P;
+
+            Body.P += Body.force * t;
             Body.X += Body.vel * t;
         }
 

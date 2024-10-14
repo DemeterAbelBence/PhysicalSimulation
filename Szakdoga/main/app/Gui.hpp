@@ -1,7 +1,7 @@
 #pragma once
 
 #include "src/util/gl/Debug.hpp"
-#include "src/visual/Rect.hpp"
+#include "src/visual/primitives/Rect.hpp"
 
 #include "imgui/imGui.h"
 #include "imgui/imGui_impl_glfw.h"
@@ -29,6 +29,8 @@ private:
 	static void renderViewSettings();
 	static void renderRotationSettings();
 	static void renderSimulationSettings();
+	static void renderTerrainSettings();
+	static void renderTesselationPicker();
 
 public:
 	static void initialize(GLFWwindow* window, Scene* _scene);
